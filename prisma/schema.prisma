@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Item {
+  id           String   @id @default(cuid())
+  urlName      String   @unique @map("url_name")
+  name         String
+  category     String   @default("mod")
+  tags         String[]
+
+  // Polling configuration
+  tier         Int      @default(1)
+  pollInterval Int      @default(5) @map("poll_interval") // minutes
+  lastPolled   DateTime? @map("last_polled")
+
+  // Relations
+  orders       Order[]
+  priceHistory PriceHistory[]
+
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("items")
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  itemId      String   @map("item_id")
+  item        Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  orderId     String   @unique @map("order_id") // Warframe.Market order ID
+  orderType   String   @map("order_type") // "sell" or "buy"
+  platinum    Int
+  quantity    Int
+  user        String
+  platform    String   @default("pc")
+  region      String   @default("en")
+  online      Boolean  @default(false)
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  lastSeen    DateTime @default(now()) @map("last_seen")
+
+  @@index([itemId, orderType])
+  @@map("orders")
+}
+
+model PriceHistory {
+  id        String   @id @default(cuid())
+  itemId    String   @map("item_id")
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  timestamp DateTime @default(now())
+
+  // Price statistics
+  minPrice  Int      @map("min_price")
+  maxPrice  Int      @map("max_price")
+  avgPrice  Float    @map("avg_price")
+  median    Float
+  volume    Int      @default(0)
+
+  @@index([itemId, timestamp])
+  @@map("price_history")
+}
