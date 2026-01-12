@@ -31,12 +31,12 @@ export async function GET(
 
     // Separate buy and sell orders
     const buyOrders = item.orders
-      .filter(order => order.orderType === 'buy')
-      .sort((a, b) => b.platinum - a.platinum); // Highest buy price first
+      .filter((order: { orderType: string }) => order.orderType === 'buy')
+      .sort((a: { platinum: number }, b: { platinum: number }) => b.platinum - a.platinum); // Highest buy price first
 
     const sellOrders = item.orders
-      .filter(order => order.orderType === 'sell')
-      .sort((a, b) => a.platinum - b.platinum); // Lowest sell price first
+      .filter((order: { orderType: string }) => order.orderType === 'sell')
+      .sort((a: { platinum: number }, b: { platinum: number }) => a.platinum - b.platinum); // Lowest sell price first
 
     // Calculate current statistics
     const stats = {
