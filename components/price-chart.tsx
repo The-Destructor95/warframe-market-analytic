@@ -28,7 +28,7 @@ export function PriceChart({ data }: PriceChartProps) {
   if (!data || data.length === 0) {
     return (
       <div className="h-[400px] flex items-center justify-center text-muted-foreground">
-        Pas encore de données d'historique. Attendez le prochain polling.
+        Pas encore de données d&apos;historique. Attendez le prochain polling.
       </div>
     );
   }

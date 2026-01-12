@@ -91,7 +91,7 @@ export default async function ItemPage({ params }: PageProps) {
             </div>
 
             <div className="bg-card border border-border rounded-lg p-4">
-              <p className="text-sm text-muted-foreground">Ordres d'achat</p>
+              <p className="text-sm text-muted-foreground">Ordres d&apos;achat</p>
               <p className="text-2xl font-bold text-foreground">{stats.buyOrdersCount}</p>
             </div>
 
